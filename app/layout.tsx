@@ -10,7 +10,7 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   viewportFit: 'cover',
-  themeColor: '#0B1F2A',
+  themeColor: '#0A0E1A',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -22,10 +22,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           margin: 0,
           padding: 0,
           fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
-          background: '#F8FAFC',
-          color: '#0F172A',
+          background: '#0A0E1A',
+          color: '#F1F5F9',
           overflowX: 'hidden',
           maxWidth: '100vw',
+          minHeight: '100vh',
         }}
       >
         {children}

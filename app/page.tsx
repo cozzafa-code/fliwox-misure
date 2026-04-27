@@ -1,60 +1,37 @@
 'use client';
 
 // ============================================================
-// fliwoX Misure — Dashboard principale
-// Supercalendario iperconnesso con commesse + task + zona
+// fliwoX Misure — HOME mobile (dark, mockup approvato 27/04/2026)
+// 6 tile colorate + prossimo appuntamento + bottom nav
 // ============================================================
 
-import { useEffect, useMemo, useState, type CSSProperties } from 'react';
-import {
-  AZIENDA_ID,
-  fetchPipelineFasi,
-  fetchCommesseDashboard,
-  fetchEventiRange,
-  fetchTasksAperti,
-} from '@/lib/api';
-import { supabase } from '@/lib/supabase';
-import { MC, MF, MR, MS, MP } from '@/constants/design-system';
-import {
-  startOfWeek,
-  endOfWeek,
-  formatDate,
-  isToday,
-  formatGiornoLungo,
-} from '@/lib/dates';
-import type { Commessa, Evento, Task, PipelineFase } from '@/lib/types';
-import KPIStrip from '@/components/dashboard/KPIStrip';
-import TaskList from '@/components/dashboard/TaskList';
-import CalendarioSettimana from '@/components/calendario/CalendarioSettimana';
-import CommessaCard from '@/components/commesse/CommessaCard';
+import { useEffect, useState, type CSSProperties } from 'react';
+import { fetchHomeStats, fetchProssimoEvento, type HomeStats } from '@/lib/api';
+import { MC, MR, MF } from '@/constants/design-system';
+import type { Evento } from '@/lib/types';
+import TopBar from '@/components/mobile/TopBar';
+import BottomNav from '@/components/mobile/BottomNav';
+import HomeTile from '@/components/mobile/HomeTile';
+import ProssimoAppuntamento from '@/components/mobile/ProssimoAppuntamento';
 
 export const dynamic = 'force-dynamic';
 
-export default function DashboardPage() {
-  const [weekStart, setWeekStart] = useState<Date>(startOfWeek(new Date()));
-  const [commesse, setCommesse] = useState<Commessa[]>([]);
-  const [eventi, setEventi] = useState<Evento[]>([]);
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [fasi, setFasi] = useState<PipelineFase[]>([]);
+// Per ora hardcoded — l'auth la mettiamo dopo
+const NOME_UTENTE = 'Francesco';
+
+export default function HomePage() {
+  const [stats, setStats] = useState<HomeStats | null>(null);
+  const [prossimo, setProssimo] = useState<Evento | null>(null);
   const [loading, setLoading] = useState(true);
-  const [errorMsg, setErrorMsg] = useState<string>('');
+  const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
     async function load() {
       try {
         setLoading(true);
-        const from = formatDate(weekStart);
-        const to = formatDate(endOfWeek(weekStart));
-        const [cmm, evv, tt, ff] = await Promise.all([
-          fetchCommesseDashboard(),
-          fetchEventiRange(from, to),
-          fetchTasksAperti(),
-          fetchPipelineFasi(),
-        ]);
-        setCommesse(cmm);
-        setEventi(evv);
-        setTasks(tt);
-        setFasi(ff);
+        const [s, p] = await Promise.all([fetchHomeStats(), fetchProssimoEvento()]);
+        setStats(s);
+        setProssimo(p);
         setErrorMsg('');
       } catch (e: any) {
         setErrorMsg(e?.message ?? 'Errore caricamento');
@@ -63,106 +40,71 @@ export default function DashboardPage() {
       }
     }
     load();
-  }, [weekStart]);
-
-  const fasiByCodice = useMemo(() => {
-    const map = new Map<string, PipelineFase>();
-    fasi.forEach((f) => map.set(f.codice, f));
-    return map;
-  }, [fasi]);
-
-  const eventiOggi = useMemo(
-    () => eventi.filter((e) => isToday(e.data) && !e.completato),
-    [eventi],
-  );
-
-  // KPI calcolati
-  const commesseAperte = commesse.filter((c) => !c.ferma && c.fase !== 'chiusura');
-  const daRilevare = commesse.filter((c) => c.fase === 'misure' || c.fase === 'sopralluogo');
-
-  const kpiItems = [
-    { label: 'Commesse aperte', value: commesseAperte.length, color: MC.tealDark, icon: '📋' },
-    { label: 'Da rilevare', value: daRilevare.length, color: MC.warning, icon: '📐' },
-    { label: 'Eventi oggi', value: eventiOggi.length, color: MC.info, icon: '📅' },
-    { label: 'Task aperti', value: tasks.filter((t) => !t.done).length, color: MC.danger, icon: '✓' },
-  ];
-
-  const handleToggleTask = async (id: string, done: boolean) => {
-    setTasks((prev) => prev.map((t) => (t.id === id ? { ...t, done } : t)));
-    await supabase
-      .from('tasks')
-      .update({ done, done_at: done ? new Date().toISOString() : null })
-      .eq('id', id);
-  };
+  }, []);
 
   return (
     <main style={S.page}>
-      <header style={S.topbar}>
-        <div style={S.brand}>
-          fliwo<span style={{ color: MC.teal }}>X</span>{' '}
-          <span style={S.brandSub}>Misure</span>
-        </div>
-        <div style={S.dateBox}>
-          <div style={S.dateLabel}>Oggi</div>
-          <div style={S.dateValue}>{formatGiornoLungo(new Date())}</div>
-        </div>
-      </header>
+      <TopBar rightIcon="🔔" onRightClick={() => {}} />
 
       <div style={S.body}>
-        {errorMsg && <div style={S.errorBox}>⚠ {errorMsg}</div>}
-        {loading && !errorMsg && (
-          <div style={S.loading}>Caricamento dati…</div>
-        )}
-
-        <section style={S.section}>
-          <KPIStrip items={kpiItems} />
-        </section>
-
-        <section style={S.section}>
-          <div style={S.sectionHeader}>
-            <h2 style={S.sectionTitle}>Calendario settimana</h2>
-            <button onClick={() => setWeekStart(startOfWeek(new Date()))} style={S.todayBtn}>
-              Oggi
-            </button>
-          </div>
-          <CalendarioSettimana
-            weekStart={weekStart}
-            eventi={eventi}
-            onPrevWeek={() => {
-              const d = new Date(weekStart);
-              d.setDate(d.getDate() - 7);
-              setWeekStart(d);
-            }}
-            onNextWeek={() => {
-              const d = new Date(weekStart);
-              d.setDate(d.getDate() + 7);
-              setWeekStart(d);
-            }}
-          />
-        </section>
-
-        <div style={S.twoCol}>
-          <section style={S.section}>
-            <div style={S.sectionHeader}>
-              <h2 style={S.sectionTitle}>Commesse aperte</h2>
-              <span style={S.count}>{commesseAperte.length}</span>
-            </div>
-            <div style={S.cardsGrid}>
-              {commesseAperte.slice(0, 6).map((c) => (
-                <CommessaCard key={c.id} commessa={c} fase={fasiByCodice.get(c.fase ?? '')} />
-              ))}
-            </div>
-          </section>
-
-          <section style={S.section}>
-            <div style={S.sectionHeader}>
-              <h2 style={S.sectionTitle}>Task</h2>
-              <span style={S.count}>{tasks.length}</span>
-            </div>
-            <TaskList tasks={tasks} onToggle={handleToggleTask} />
-          </section>
+        <div style={S.greeting}>
+          <h1 style={S.helloTitle}>
+            Ciao {NOME_UTENTE} <span style={S.wave}>👋</span>
+          </h1>
+          <p style={S.helloSub}>Ecco cosa hai oggi.</p>
         </div>
+
+        {errorMsg && <div style={S.error}>⚠ {errorMsg}</div>}
+
+        <div style={S.tilesGrid}>
+          <HomeTile
+            label="Commesse oggi"
+            count={stats?.commesseOggi ?? (loading ? 0 : 0)}
+            color={MC.tileCommesseOggi}
+            href="/commesse?filter=oggi"
+            icon={<span>📋</span>}
+          />
+          <HomeTile
+            label="Sopralluoghi"
+            count={stats?.sopralluoghi ?? 0}
+            color={MC.tileSopralluoghi}
+            href="/commesse?filter=sopralluogo"
+            icon={<span>🔍</span>}
+          />
+          <HomeTile
+            label="Misure da fare"
+            count={stats?.misureDaFare ?? 0}
+            color={MC.tileMisure}
+            href="/commesse?filter=misure"
+            icon={<span>📐</span>}
+          />
+          <HomeTile
+            label="Montaggi"
+            count={stats?.montaggi ?? 0}
+            color={MC.tileMontaggi}
+            href="/commesse?filter=montaggi"
+            icon={<span>🔧</span>}
+          />
+          <HomeTile
+            label="Problemi"
+            count={stats?.problemi ?? 0}
+            color={MC.tileProblemi}
+            href="/commesse?filter=problemi"
+            icon={<span>⚠</span>}
+          />
+          <HomeTile
+            label="Foto da completare"
+            count={stats?.fotoDaCompletare ?? 0}
+            color={MC.tileFoto}
+            href="/commesse?filter=foto"
+            icon={<span>📸</span>}
+          />
+        </div>
+
+        <ProssimoAppuntamento evento={prossimo} />
       </div>
+
+      <BottomNav />
     </main>
   );
 }
@@ -172,114 +114,49 @@ const S = {
     minHeight: '100vh',
     background: MC.bg,
     fontFamily: MF.ui,
-  } as CSSProperties,
-  topbar: {
-    background: MC.topbar,
-    padding: '14px 20px',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    position: 'sticky' as const,
-    top: 0,
-    zIndex: 10,
-  } as CSSProperties,
-  brand: {
-    fontSize: 20,
-    fontWeight: 900,
-    color: '#fff',
-    letterSpacing: -0.5,
-  } as CSSProperties,
-  brandSub: {
-    color: MC.tealBg,
-    fontWeight: 600,
-    marginLeft: 4,
-  } as CSSProperties,
-  dateBox: {
-    textAlign: 'right' as const,
-  } as CSSProperties,
-  dateLabel: {
-    fontSize: 10,
-    fontWeight: 700,
-    color: 'rgba(255,255,255,0.5)',
-    textTransform: 'uppercase' as const,
-    letterSpacing: 0.5,
-  } as CSSProperties,
-  dateValue: {
-    fontSize: 13,
-    fontWeight: 600,
-    color: '#fff',
-    fontFamily: MF.mono,
+    color: MC.text,
+    paddingBottom: 96, // space per BottomNav
   } as CSSProperties,
   body: {
-    padding: 20,
-    maxWidth: 1400,
-    margin: '0 auto',
+    padding: '20px 16px',
     display: 'flex',
     flexDirection: 'column' as const,
     gap: 20,
+    maxWidth: 480,
+    margin: '0 auto',
   } as CSSProperties,
-  errorBox: {
-    padding: 14,
+  greeting: {
+    display: 'flex',
+    flexDirection: 'column' as const,
+    gap: 4,
+  } as CSSProperties,
+  helloTitle: {
+    fontSize: 24,
+    fontWeight: 800,
+    color: MC.text,
+    margin: 0,
+    letterSpacing: -0.5,
+  } as CSSProperties,
+  wave: {
+    display: 'inline-block',
+    transform: 'rotate(-10deg)',
+  } as CSSProperties,
+  helloSub: {
+    fontSize: 14,
+    color: MC.muted,
+    margin: 0,
+  } as CSSProperties,
+  tilesGrid: {
+    display: 'grid',
+    gridTemplateColumns: '1fr 1fr',
+    gap: 12,
+  } as CSSProperties,
+  error: {
+    padding: 12,
     background: MC.dangerSoft,
     color: MC.danger,
     borderRadius: MR.md,
     fontSize: 13,
     fontWeight: 600,
-  } as CSSProperties,
-  loading: {
-    padding: 14,
-    background: MC.warningSoft,
-    color: MC.warning,
-    borderRadius: MR.md,
-    fontSize: 13,
-    fontWeight: 600,
-    textAlign: 'center' as const,
-  } as CSSProperties,
-  section: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: 12,
-  } as CSSProperties,
-  sectionHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  } as CSSProperties,
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: 800,
-    color: MC.text,
-    margin: 0,
-  } as CSSProperties,
-  todayBtn: {
-    background: MC.card,
-    color: MC.tealDark,
-    border: `1px solid ${MC.border}`,
-    padding: '6px 14px',
-    borderRadius: MR.md,
-    fontSize: 12,
-    fontWeight: 700,
-    cursor: 'pointer',
-    fontFamily: 'inherit',
-    boxShadow: MS.button,
-  } as CSSProperties,
-  count: {
-    background: MC.bgSoft,
-    color: MC.muted,
-    padding: '3px 10px',
-    borderRadius: MR.full,
-    fontSize: 11,
-    fontWeight: 700,
-    fontFamily: MF.mono,
-  } as CSSProperties,
-  twoCol: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-    gap: 20,
-  } as CSSProperties,
-  cardsGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-    gap: 12,
   } as CSSProperties,
 };
