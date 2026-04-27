@@ -12,10 +12,9 @@ export default function NuovaPage() {
   const router = useRouter();
   return (
     <main style={S.page}>
-      <TopBar leftIcon="✕" onLeftClick={() => router.push('/')} title={<span style={S.title}>Nuova</span>} />
+      <TopBar leftIcon="close" onLeftClick={() => router.push('/')} title={<span style={S.title}>Nuova</span>} />
       <div style={S.body}>
         <div style={S.placeholder}>
-          <div style={S.icon}>＋</div>
           <div style={S.label}>Nuova commessa, evento, task</div>
           <div style={S.sub}>In costruzione.</div>
         </div>
@@ -39,7 +38,6 @@ const S = {
     flexDirection: 'column' as const,
     gap: 8,
   } as CSSProperties,
-  icon: { fontSize: 40 } as CSSProperties,
   label: { fontSize: 16, fontWeight: 700, color: MC.text } as CSSProperties,
   sub: { fontSize: 13, color: MC.muted } as CSSProperties,
 };

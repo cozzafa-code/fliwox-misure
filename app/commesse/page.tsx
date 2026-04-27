@@ -12,11 +12,15 @@ export default function CommessePage() {
   const router = useRouter();
   return (
     <main style={S.page}>
-      <TopBar leftIcon="‹" onLeftClick={() => router.back()} title={<span style={S.title}>Commesse</span>} rightIcon="🔍" />
+      <TopBar
+        leftIcon="back"
+        onLeftClick={() => router.back()}
+        title={<span style={S.title}>Commesse</span>}
+        rightIcon="search"
+      />
       <div style={S.body}>
         <div style={S.placeholder}>
-          <div style={S.icon}>📋</div>
-          <div style={S.label}>Lista commesse con filtri</div>
+          <div style={S.label}>Lista commesse</div>
           <div style={S.sub}>In costruzione — prossimo step.</div>
         </div>
       </div>
@@ -39,7 +43,6 @@ const S = {
     flexDirection: 'column' as const,
     gap: 8,
   } as CSSProperties,
-  icon: { fontSize: 40 } as CSSProperties,
   label: { fontSize: 16, fontWeight: 700, color: MC.text } as CSSProperties,
   sub: { fontSize: 13, color: MC.muted } as CSSProperties,
 };

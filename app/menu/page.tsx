@@ -12,11 +12,10 @@ export default function MenuPage() {
   const router = useRouter();
   return (
     <main style={S.page}>
-      <TopBar leftIcon="‹" onLeftClick={() => router.back()} title={<span style={S.title}>Menu</span>} />
+      <TopBar leftIcon="back" onLeftClick={() => router.back()} title={<span style={S.title}>Menu</span>} />
       <div style={S.body}>
         <div style={S.placeholder}>
-          <div style={S.icon}>☰</div>
-          <div style={S.label}>Profilo, Impostazioni, Squadra</div>
+          <div style={S.label}>Profilo, Impostazioni</div>
           <div style={S.sub}>In costruzione.</div>
         </div>
       </div>
@@ -39,7 +38,6 @@ const S = {
     flexDirection: 'column' as const,
     gap: 8,
   } as CSSProperties,
-  icon: { fontSize: 40 } as CSSProperties,
   label: { fontSize: 16, fontWeight: 700, color: MC.text } as CSSProperties,
   sub: { fontSize: 13, color: MC.muted } as CSSProperties,
 };

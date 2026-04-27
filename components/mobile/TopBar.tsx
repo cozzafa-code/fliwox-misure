@@ -1,19 +1,32 @@
 'use client';
 
 // ============================================================
-// fliwoX Misure — Top bar mobile
-// Logo fliwoX centrato + icona destra opzionale
+// fliwoX Misure — Top bar mobile (mockup-fedele)
+// Logo fliwoX (X teal in cerchio) centrato + icone SVG laterali
 // ============================================================
 
 import type { CSSProperties, ReactNode } from 'react';
 import { MC, MR } from '@/constants/design-system';
+import { IconBell, IconChevronLeft, IconClose, IconSearch, IconLogoX } from '@/components/icons';
+
+type IconKey = 'bell' | 'back' | 'close' | 'search' | null;
 
 interface Props {
-  rightIcon?: string;
+  rightIcon?: IconKey;
   onRightClick?: () => void;
-  leftIcon?: string;
+  leftIcon?: IconKey;
   onLeftClick?: () => void;
   title?: ReactNode;
+}
+
+function renderIcon(key: IconKey | undefined) {
+  switch (key) {
+    case 'bell': return <IconBell size={22} />;
+    case 'back': return <IconChevronLeft size={24} />;
+    case 'close': return <IconClose size={22} />;
+    case 'search': return <IconSearch size={22} />;
+    default: return null;
+  }
 }
 
 export default function TopBar({ rightIcon, onRightClick, leftIcon, onLeftClick, title }: Props) {
@@ -22,7 +35,7 @@ export default function TopBar({ rightIcon, onRightClick, leftIcon, onLeftClick,
       <div style={S.side}>
         {leftIcon && (
           <button onClick={onLeftClick} style={S.iconBtn} aria-label="Indietro">
-            {leftIcon}
+            {renderIcon(leftIcon)}
           </button>
         )}
       </div>
@@ -32,7 +45,7 @@ export default function TopBar({ rightIcon, onRightClick, leftIcon, onLeftClick,
       <div style={S.side}>
         {rightIcon && (
           <button onClick={onRightClick} style={S.iconBtn} aria-label="Azione">
-            {rightIcon}
+            {renderIcon(rightIcon)}
           </button>
         )}
       </div>
@@ -44,7 +57,7 @@ function Brand() {
   return (
     <div style={S.brand}>
       <span style={S.brandLogo}>
-        <span style={S.brandX}>✕</span>
+        <IconLogoX size={14} strokeWidth={3} />
       </span>
       <span style={S.brandText}>
         fliwo<span style={{ color: MC.teal }}>X</span>
@@ -82,9 +95,11 @@ const S = {
     background: 'transparent',
     border: 'none',
     color: MC.text,
-    fontSize: 20,
     cursor: 'pointer',
     fontFamily: 'inherit',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   } as CSSProperties,
   brand: {
     display: 'flex',
@@ -92,20 +107,15 @@ const S = {
     gap: 6,
   } as CSSProperties,
   brandLogo: {
-    width: 22,
-    height: 22,
-    borderRadius: MR.sm,
+    width: 24,
+    height: 24,
+    borderRadius: '50%',
     background: 'rgba(20,184,166,0.15)',
     border: `1.5px solid ${MC.teal}`,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  } as CSSProperties,
-  brandX: {
     color: MC.teal,
-    fontSize: 12,
-    fontWeight: 800,
-    lineHeight: 1,
   } as CSSProperties,
   brandText: {
     color: MC.text,

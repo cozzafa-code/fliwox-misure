@@ -1,8 +1,8 @@
 'use client';
 
 // ============================================================
-// fliwoX Misure — HOME mobile (dark, mockup approvato 27/04/2026)
-// 6 tile colorate + prossimo appuntamento + bottom nav
+// fliwoX Misure — HOME mobile (dark, mockup-fedele 27/04/2026)
+// 6 tile colorate con icone SVG outline + prossimo appuntamento + bottom nav
 // ============================================================
 
 import { useEffect, useState, type CSSProperties } from 'react';
@@ -13,10 +13,17 @@ import TopBar from '@/components/mobile/TopBar';
 import BottomNav from '@/components/mobile/BottomNav';
 import HomeTile from '@/components/mobile/HomeTile';
 import ProssimoAppuntamento from '@/components/mobile/ProssimoAppuntamento';
+import {
+  IconCommesse,
+  IconSopralluogo,
+  IconMisure,
+  IconMontaggi,
+  IconProblemi,
+  IconFoto,
+} from '@/components/icons';
 
 export const dynamic = 'force-dynamic';
 
-// Per ora hardcoded — l'auth la mettiamo dopo
 const NOME_UTENTE = 'Francesco';
 
 export default function HomePage() {
@@ -44,7 +51,7 @@ export default function HomePage() {
 
   return (
     <main style={S.page}>
-      <TopBar rightIcon="🔔" onRightClick={() => {}} />
+      <TopBar rightIcon="bell" onRightClick={() => {}} />
 
       <div style={S.body}>
         <div style={S.greeting}>
@@ -59,45 +66,45 @@ export default function HomePage() {
         <div style={S.tilesGrid}>
           <HomeTile
             label="Commesse oggi"
-            count={stats?.commesseOggi ?? (loading ? 0 : 0)}
+            count={stats?.commesseOggi ?? 0}
             color={MC.tileCommesseOggi}
             href="/commesse?filter=oggi"
-            icon={<span>📋</span>}
+            icon={<IconCommesse size={20} />}
           />
           <HomeTile
             label="Sopralluoghi"
             count={stats?.sopralluoghi ?? 0}
             color={MC.tileSopralluoghi}
             href="/commesse?filter=sopralluogo"
-            icon={<span>🔍</span>}
+            icon={<IconSopralluogo size={20} />}
           />
           <HomeTile
             label="Misure da fare"
             count={stats?.misureDaFare ?? 0}
             color={MC.tileMisure}
             href="/commesse?filter=misure"
-            icon={<span>📐</span>}
+            icon={<IconMisure size={20} />}
           />
           <HomeTile
             label="Montaggi"
             count={stats?.montaggi ?? 0}
             color={MC.tileMontaggi}
             href="/commesse?filter=montaggi"
-            icon={<span>🔧</span>}
+            icon={<IconMontaggi size={20} />}
           />
           <HomeTile
             label="Problemi"
             count={stats?.problemi ?? 0}
             color={MC.tileProblemi}
             href="/commesse?filter=problemi"
-            icon={<span>⚠</span>}
+            icon={<IconProblemi size={20} />}
           />
           <HomeTile
             label="Foto da completare"
             count={stats?.fotoDaCompletare ?? 0}
             color={MC.tileFoto}
             href="/commesse?filter=foto"
-            icon={<span>📸</span>}
+            icon={<IconFoto size={20} />}
           />
         </div>
 
@@ -115,7 +122,7 @@ const S = {
     background: MC.bg,
     fontFamily: MF.ui,
     color: MC.text,
-    paddingBottom: 96, // space per BottomNav
+    paddingBottom: 96,
   } as CSSProperties,
   body: {
     padding: '20px 16px',
