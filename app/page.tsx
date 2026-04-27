@@ -1,15 +1,23 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { supabase } from '@/lib/supabase';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 import { MC, MF, MR, MS } from '@/constants/design-system';
+
+// Disabilita prerender statico - il client Supabase viene creato al request time
+export const dynamic = 'force-dynamic';
 
 export default function HomePage() {
   const [supabaseStatus, setSupabaseStatus] = useState<'check' | 'ok' | 'error'>('check');
   const [errorMsg, setErrorMsg] = useState<string>('');
 
   useEffect(() => {
-    // Test connessione Supabase: query semplice su tabella esistente
+    if (!isSupabaseConfigured()) {
+      setSupabaseStatus('error');
+      setErrorMsg('NEXT_PUBLIC_SUPABASE_URL o NEXT_PUBLIC_SUPABASE_ANON_KEY non configurati');
+      return;
+    }
+
     supabase
       .from('aziende')
       .select('id')
@@ -38,7 +46,7 @@ export default function HomePage() {
           <div style={S.statusRow}>
             <span style={S.statusLabel}>Setup Next.js</span>
             <span style={{ ...S.statusBadge, background: MC.successSoft, color: MC.success }}>
-              ✓ OK
+              OK
             </span>
           </div>
 
@@ -62,10 +70,10 @@ export default function HomePage() {
               }}
             >
               {supabaseStatus === 'ok'
-                ? '✓ OK'
+                ? 'OK'
                 : supabaseStatus === 'error'
-                ? '✗ ERR'
-                : '... check'}
+                ? 'ERR'
+                : '...'}
             </span>
           </div>
 
