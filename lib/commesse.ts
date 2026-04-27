@@ -19,7 +19,7 @@ export const STATO_COM_LABEL: Record<StatoCom, string> = {
 export const STATO_COM_BG: Record<StatoCom, string> = {
   in_corso: '#F28C1A',
   in_attesa: '#F1C40F',
-  in_sospeso: '#E67E22',
+  in_sospeso: '#9B59B6', // viola come nel mockup
   chiusa: '#6CC0A4',
 };
 
@@ -29,6 +29,15 @@ export const STATO_COM_FG: Record<StatoCom, string> = {
   in_sospeso: '#FFFFFF',
   chiusa: '#1E2128',
 };
+
+// Counts hardcoded come da mockup (in attesa del DB reale)
+export const COUNTS_HARDCODED = {
+  all: 78,
+  in_corso: 32,
+  in_attesa: 16,
+  in_sospeso: 7,
+  chiusa: 21,
+} as const;
 
 export const TIPO_INT_LABEL: Record<TipoIntervento, string> = {
   serramenti: 'Serramenti',

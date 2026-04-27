@@ -30,10 +30,21 @@ export default function PannelloDettaglio({ com, onClose, onAzione }: Props) {
         {/* Col 1: Foto + cliente principali */}
         <div style={S.colCliente}>
           <div style={S.thumb}>
-            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round">
-              <rect x="4" y="4" width="16" height="16" rx="1" />
-              <line x1="12" y1="4" x2="12" y2="20" />
-              <line x1="4" y1="12" x2="20" y2="12" />
+            <svg width="80" height="80" viewBox="0 0 100 100" fill="none">
+              {/* telaio esterno */}
+              <rect x="6" y="6" width="88" height="88" rx="2" fill="#1A1F26" stroke={MC.muted} strokeWidth="2" />
+              {/* divisorio centrale verticale */}
+              <line x1="50" y1="6" x2="50" y2="94" stroke={MC.muted} strokeWidth="2" />
+              {/* divisorio orizzontale */}
+              <line x1="6" y1="50" x2="94" y2="50" stroke={MC.muted} strokeWidth="2" />
+              {/* riflessi vetro */}
+              <rect x="12" y="12" width="34" height="34" fill="rgba(47,167,162,0.08)" />
+              <rect x="54" y="12" width="34" height="34" fill="rgba(47,167,162,0.12)" />
+              <rect x="12" y="54" width="34" height="34" fill="rgba(47,167,162,0.06)" />
+              <rect x="54" y="54" width="34" height="34" fill="rgba(47,167,162,0.10)" />
+              {/* maniglie */}
+              <rect x="46" y="46" width="3" height="14" fill={MC.muted} rx="1" />
+              <rect x="51" y="46" width="3" height="14" fill={MC.muted} rx="1" />
             </svg>
           </div>
           <div style={S.clienteName}>{com.cliente}</div>
@@ -189,15 +200,13 @@ const S = {
     marginBottom: 10,
   } as CSSProperties,
   thumb: {
-    width: 64, height: 64,
+    width: 96, height: 96,
     background: MC.bg,
-    border: `1px solid ${MC.border}`,
     borderRadius: MR.md,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: MC.muted,
-    marginBottom: 8,
+    marginBottom: 10,
   } as CSSProperties,
   clienteName: { fontSize: 15, fontWeight: 800, color: MC.text } as CSSProperties,
   clienteTipo: { fontSize: 11, color: MC.muted, marginTop: 2 } as CSSProperties,

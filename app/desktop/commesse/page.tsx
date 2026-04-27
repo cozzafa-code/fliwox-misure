@@ -21,7 +21,7 @@ import NoteComunicazioni from '@/components/commesse-desktop/NoteComunicazioni';
 import AttivitaCorrelate from '@/components/commesse-desktop/AttivitaCorrelate';
 import EsportazioniReport from '@/components/commesse-desktop/EsportazioniReport';
 import FunzionalitaChiave from '@/components/commesse-desktop/FunzionalitaChiave';
-import { type ComRow, type StatoCom, COMMESSE_MOCK } from '@/lib/commesse';
+import { type ComRow, type StatoCom, COMMESSE_MOCK, COUNTS_HARDCODED } from '@/lib/commesse';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,13 +38,10 @@ export default function CommesseDesktopPage() {
   const [rows, setRows] = useState<ComRow[]>(COMMESSE_MOCK);
 
   const counts = useMemo(() => {
-    const all = rows.length;
-    const inCorso = rows.filter((r) => r.stato === 'in_corso').length;
-    const inAttesa = rows.filter((r) => r.stato === 'in_attesa').length;
-    const inSospeso = rows.filter((r) => r.stato === 'in_sospeso').length;
-    const chiusa = rows.filter((r) => r.stato === 'chiusa').length;
-    return { all, in_corso: inCorso, in_attesa: inAttesa, in_sospeso: inSospeso, chiusa };
-  }, [rows]);
+    // I numeri in tab sono fissi come da mockup specifica (78/32/16/7/21)
+    // I rows mock sono solo un campione visualizzabile
+    return COUNTS_HARDCODED;
+  }, []);
 
   const filtered = useMemo(() => {
     let res = rows;
