@@ -56,7 +56,7 @@ export default function HomePage() {
       <div style={S.body}>
         <div style={S.greeting}>
           <h1 style={S.helloTitle}>
-            Ciao {NOME_UTENTE} <span>👋</span>
+            Ciao {NOME_UTENTE}
           </h1>
           <p style={S.helloSub}>Ecco cosa hai oggi.</p>
         </div>

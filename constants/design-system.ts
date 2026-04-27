@@ -1,48 +1,55 @@
 // ============================================================
-// fliwoX Design System v2 — DARK mockup approvato 27/04/2026
+// fliwoX Design System v3 — DARK + palette ufficiale brand
 // ============================================================
 
 export const MC = {
-  // Background dark
-  bg: '#0A0E1A',
-  bgSoft: '#101524',
-  card: '#161B2A',
-  cardSoft: '#1C2236',
-  topbar: '#0A0E1A',
+  // Background dark (mockup master)
+  bg: '#1E2128',
+  bgSoft: '#252830',
+  card: '#2D3D3B',
+  cardSoft: '#243034',
+  topbar: '#1E2128',
 
   // Text
-  text: '#F1F5F9',
-  textSoft: '#CBD5E1',
-  muted: '#94A3B8',
-  mutedSoft: '#64748B',
+  text: '#FFFFFF',
+  textSoft: '#E5E7EB',
+  muted: '#A4A78A',
+  mutedSoft: '#6B7280',
 
   // Borders
-  border: '#1F2937',
-  borderSoft: '#161E2E',
-  borderStrong: '#374151',
+  border: '#3A4148',
+  borderSoft: '#252830',
+  borderStrong: '#4B5563',
 
-  // Accent (logo)
-  teal: '#14B8A6',
-  tealDark: '#0F766E',
-  tealBg: '#0D3B36',
+  // Brand (logo ufficiale fliwoX)
+  teal: '#2FA7A2',
+  tealLight: '#3EC7C1',
+  tealDark: '#1F7A76',
+  tealBg: '#1A3F3D',
 
-  // Status
-  success: '#22C55E',
-  successSoft: '#14532D',
-  warning: '#F59E0B',
-  warningSoft: '#451A03',
-  danger: '#EF4444',
-  dangerSoft: '#450A0A',
-  info: '#3B82F6',
-  infoSoft: '#1E3A8A',
+  // Status (mockup)
+  success: '#6CC0A4',
+  successSoft: '#1A3F3D',
+  warning: '#F28C1A',
+  warningSoft: '#3D2A12',
+  danger: '#E74C3C',
+  dangerSoft: '#3D1F1B',
+  info: '#1B8CC4',
+  infoSoft: '#1A2D3D',
 
-  // Tile colors mockup home
-  tileCommesseOggi: '#7BA0E0',
-  tileSopralluoghi: '#E89947',
-  tileMisure: '#86A872',
-  tileMontaggi: '#4A90E2',
+  // Tile colors mockup home (palette ufficiale)
+  tileCommesseOggi: '#1B8CC4',
+  tileSopralluoghi: '#F28C1A',
+  tileMisure: '#6CC0A4',
+  tileMontaggi: '#1E74C3',
   tileProblemi: '#E74C3C',
-  tileFoto: '#9B7BC8',
+  tileFoto: '#7A2F8A',
+
+  // Stati commessa
+  statoInCorso: '#F28C1A',
+  statoInAttesa: '#F1C40F',
+  statoCompletata: '#6CC0A4',
+  statoChiusa: '#6B7280',
 } as const;
 
 export const MF = {
@@ -62,5 +69,5 @@ export const MS = {
   card: '0 1px 2px rgba(0,0,0,0.3), 0 2px 4px rgba(0,0,0,0.2)',
   tile: '0 4px 12px rgba(0,0,0,0.25)',
   button: '0 1px 2px rgba(0,0,0,0.2)',
-  fab: '0 6px 20px rgba(20,184,166,0.4)',
+  fab: '0 6px 20px rgba(47,167,162,0.4)',
 } as const;

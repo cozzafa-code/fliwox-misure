@@ -9,6 +9,25 @@ import type { Commessa, Evento, Task, PipelineFase, Vano } from './types';
 export const AZIENDA_ID = 'ccca51c1-656b-4e7c-a501-55753e20da29';
 
 // ============================================================
+// Classificazione stato commessa per filtri lista
+// ============================================================
+export type StatoCommessa = 'in_corso' | 'in_attesa' | 'completata' | 'chiusa';
+
+export function classificaStato(c: Commessa): StatoCommessa {
+  if (c.fase === 'chiusura') return 'chiusa';
+  if (c.fase === 'posa' || c.fase === 'produzione') return 'completata';
+  if (c.ferma === true) return 'in_attesa';
+  return 'in_corso';
+}
+
+export const STATO_LABEL: Record<StatoCommessa, string> = {
+  in_corso: 'In corso',
+  in_attesa: 'In attesa',
+  completata: 'Completata',
+  chiusa: 'Chiusa',
+};
+
+// ============================================================
 // Pipeline fasi
 // ============================================================
 export async function fetchPipelineFasi(): Promise<PipelineFase[]> {

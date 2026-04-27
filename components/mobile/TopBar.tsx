@@ -1,15 +1,15 @@
 'use client';
 
 // ============================================================
-// fliwoX Misure — Top bar mobile (mockup-fedele)
-// Logo fliwoX (X teal in cerchio) centrato + icone SVG laterali
+// fliwoX Misure — Top bar mobile (logo ufficiale)
 // ============================================================
 
 import type { CSSProperties, ReactNode } from 'react';
 import { MC, MR } from '@/constants/design-system';
-import { IconBell, IconChevronLeft, IconClose, IconSearch, IconLogoX } from '@/components/icons';
+import { IconBell, IconChevronLeft, IconClose, IconSearch, IconMenu, IconPlus } from '@/components/icons';
+import { LogoBrand } from '@/components/icons/Logo';
 
-type IconKey = 'bell' | 'back' | 'close' | 'search' | null;
+type IconKey = 'bell' | 'back' | 'close' | 'search' | 'menu' | 'plus' | null;
 
 interface Props {
   rightIcon?: IconKey;
@@ -25,6 +25,8 @@ function renderIcon(key: IconKey | undefined) {
     case 'back': return <IconChevronLeft size={24} />;
     case 'close': return <IconClose size={22} />;
     case 'search': return <IconSearch size={22} />;
+    case 'menu': return <IconMenu size={22} />;
+    case 'plus': return <IconPlus size={22} />;
     default: return null;
   }
 }
@@ -40,7 +42,7 @@ export default function TopBar({ rightIcon, onRightClick, leftIcon, onLeftClick,
         )}
       </div>
       <div style={S.center}>
-        {title ?? <Brand />}
+        {title ?? <LogoBrand textSize={18} textColor={MC.text} />}
       </div>
       <div style={S.side}>
         {rightIcon && (
@@ -53,23 +55,10 @@ export default function TopBar({ rightIcon, onRightClick, leftIcon, onLeftClick,
   );
 }
 
-function Brand() {
-  return (
-    <div style={S.brand}>
-      <span style={S.brandLogo}>
-        <IconLogoX size={14} strokeWidth={3} />
-      </span>
-      <span style={S.brandText}>
-        fliwo<span style={{ color: MC.teal }}>X</span>
-      </span>
-    </div>
-  );
-}
-
 const S = {
   bar: {
     background: MC.bg,
-    height: 56,
+    height: 50,
     display: 'grid',
     gridTemplateColumns: '56px 1fr 56px',
     alignItems: 'center',
@@ -89,8 +78,8 @@ const S = {
     justifyContent: 'center',
   } as CSSProperties,
   iconBtn: {
-    width: 40,
-    height: 40,
+    width: 44,
+    height: 44,
     borderRadius: MR.md,
     background: 'transparent',
     border: 'none',
@@ -100,27 +89,5 @@ const S = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-  } as CSSProperties,
-  brand: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: 6,
-  } as CSSProperties,
-  brandLogo: {
-    width: 24,
-    height: 24,
-    borderRadius: '50%',
-    background: 'rgba(20,184,166,0.15)',
-    border: `1.5px solid ${MC.teal}`,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: MC.teal,
-  } as CSSProperties,
-  brandText: {
-    color: MC.text,
-    fontSize: 16,
-    fontWeight: 800,
-    letterSpacing: -0.3,
   } as CSSProperties,
 };
