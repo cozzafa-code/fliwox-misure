@@ -56,7 +56,7 @@ export default function HomePage() {
       <div style={S.body}>
         <div style={S.greeting}>
           <h1 style={S.helloTitle}>
-            Ciao {NOME_UTENTE} <span style={S.wave}>👋</span>
+            Ciao {NOME_UTENTE} <span>👋</span>
           </h1>
           <p style={S.helloSub}>Ecco cosa hai oggi.</p>
         </div>
@@ -69,42 +69,42 @@ export default function HomePage() {
             count={stats?.commesseOggi ?? 0}
             color={MC.tileCommesseOggi}
             href="/commesse?filter=oggi"
-            icon={<IconCommesse size={20} />}
+            icon={<IconCommesse size={16} />}
           />
           <HomeTile
             label="Sopralluoghi"
             count={stats?.sopralluoghi ?? 0}
             color={MC.tileSopralluoghi}
             href="/commesse?filter=sopralluogo"
-            icon={<IconSopralluogo size={20} />}
+            icon={<IconSopralluogo size={16} />}
           />
           <HomeTile
             label="Misure da fare"
             count={stats?.misureDaFare ?? 0}
             color={MC.tileMisure}
             href="/commesse?filter=misure"
-            icon={<IconMisure size={20} />}
+            icon={<IconMisure size={16} />}
           />
           <HomeTile
             label="Montaggi"
             count={stats?.montaggi ?? 0}
             color={MC.tileMontaggi}
             href="/commesse?filter=montaggi"
-            icon={<IconMontaggi size={20} />}
+            icon={<IconMontaggi size={16} />}
           />
           <HomeTile
             label="Problemi"
             count={stats?.problemi ?? 0}
             color={MC.tileProblemi}
             href="/commesse?filter=problemi"
-            icon={<IconProblemi size={20} />}
+            icon={<IconProblemi size={16} />}
           />
           <HomeTile
             label="Foto da completare"
             count={stats?.fotoDaCompletare ?? 0}
             color={MC.tileFoto}
             href="/commesse?filter=foto"
-            icon={<IconFoto size={20} />}
+            icon={<IconFoto size={16} />}
           />
         </div>
 
@@ -143,10 +143,6 @@ const S = {
     color: MC.text,
     margin: 0,
     letterSpacing: -0.5,
-  } as CSSProperties,
-  wave: {
-    display: 'inline-block',
-    transform: 'rotate(-10deg)',
   } as CSSProperties,
   helloSub: {
     fontSize: 14,

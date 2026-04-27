@@ -1,8 +1,8 @@
 'use client';
 
 // ============================================================
-// fliwoX Misure — HomeTile (mobile, mockup-fedele)
-// Tile colorato grande con icona SVG outline in box semi-trasparente
+// fliwoX Misure — HomeTile (mockup v3)
+// Tile compatto rettangolare, icona piccola top-left, numero+label bottom
 // ============================================================
 
 import { useRouter } from 'next/navigation';
@@ -23,8 +23,8 @@ export default function HomeTile({ label, count, color, href, icon }: Props) {
     <button onClick={() => router.push(href)} style={{ ...S.tile, background: color }}>
       <div style={S.iconWrap}>{icon}</div>
       <div style={S.bottom}>
-        <div style={S.count}>{count}</div>
         <div style={S.label}>{label}</div>
+        <div style={S.count}>{count}</div>
       </div>
     </button>
   );
@@ -32,10 +32,10 @@ export default function HomeTile({ label, count, color, href, icon }: Props) {
 
 const S = {
   tile: {
-    aspectRatio: '1 / 1',
+    height: 120,
     border: 'none',
-    borderRadius: MR.xl,
-    padding: 16,
+    borderRadius: MR.lg,
+    padding: '12px 14px',
     cursor: 'pointer',
     display: 'flex',
     flexDirection: 'column' as const,
@@ -50,9 +50,9 @@ const S = {
     width: '100%',
   } as CSSProperties,
   iconWrap: {
-    width: 36,
-    height: 36,
-    borderRadius: MR.md,
+    width: 28,
+    height: 28,
+    borderRadius: MR.sm,
     background: 'rgba(255,255,255,0.22)',
     display: 'flex',
     alignItems: 'center',
@@ -62,21 +62,22 @@ const S = {
   bottom: {
     display: 'flex',
     flexDirection: 'column' as const,
-    gap: 2,
+    gap: 0,
     width: '100%',
   } as CSSProperties,
+  label: {
+    fontSize: 10,
+    fontWeight: 700,
+    textTransform: 'uppercase' as const,
+    letterSpacing: 0.5,
+    lineHeight: 1.15,
+    opacity: 0.95,
+    marginBottom: 2,
+  } as CSSProperties,
   count: {
-    fontSize: 40,
+    fontSize: 26,
     fontWeight: 800,
     lineHeight: 1,
     fontFamily: '"JetBrains Mono", monospace',
-  } as CSSProperties,
-  label: {
-    fontSize: 11,
-    fontWeight: 700,
-    textTransform: 'uppercase' as const,
-    letterSpacing: 0.6,
-    lineHeight: 1.2,
-    opacity: 0.95,
   } as CSSProperties,
 };
