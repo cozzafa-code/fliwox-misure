@@ -7,13 +7,14 @@ import { type ComRow, STATO_COM_LABEL, STATO_COM_BG, STATO_COM_FG, TIPO_INT_LABE
 interface Props {
   rows: ComRow[];
   onSelect: (r: ComRow) => void;
+  onAggiungi?: (stato: 'in_corso' | 'in_attesa' | 'in_sospeso') => void;
 }
 
-const COL: { stato: 'in_corso' | 'in_attesa' | 'in_sospeso'; }[] = [
+const COL: { stato: 'in_corso' | 'in_attesa' | 'in_sospeso' }[] = [
   { stato: 'in_corso' }, { stato: 'in_attesa' }, { stato: 'in_sospeso' },
 ];
 
-export default function VistaKanban({ rows, onSelect }: Props) {
+export default function VistaKanban({ rows, onSelect, onAggiungi }: Props) {
   return (
     <div style={S.wrap}>
       {COL.map((c) => {
@@ -41,6 +42,7 @@ export default function VistaKanban({ rows, onSelect }: Props) {
                   <div style={S.tipo}>{TIPO_INT_LABEL[r.tipo]}</div>
                 </div>
               ))}
+              <button onClick={() => onAggiungi?.(c.stato)} style={S.addBtn}>+ Aggiungi</button>
             </div>
           </div>
         );
@@ -58,40 +60,25 @@ const S = {
     flex: 1,
     overflow: 'auto',
   } as CSSProperties,
-  col: {
-    background: MC.bgSoft,
-    borderRadius: MR.lg,
-    padding: 12,
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: 10,
-  } as CSSProperties,
-  colHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingBottom: 4,
-    borderBottom: `1px solid ${MC.borderSoft}`,
-  } as CSSProperties,
-  colBadge: {
-    padding: '4px 10px',
-    borderRadius: MR.xs,
-    fontSize: 10,
-    fontWeight: 800,
-    textTransform: 'uppercase' as const,
-    letterSpacing: 0.5,
-  } as CSSProperties,
+  col: { background: MC.bgSoft, borderRadius: MR.lg, padding: 12, display: 'flex', flexDirection: 'column' as const, gap: 10 } as CSSProperties,
+  colHeader: { display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 4, borderBottom: `1px solid ${MC.borderSoft}` } as CSSProperties,
+  colBadge: { padding: '4px 10px', borderRadius: MR.xs, fontSize: 10, fontWeight: 800, textTransform: 'uppercase' as const, letterSpacing: 0.5 } as CSSProperties,
   count: { fontSize: 13, fontWeight: 800, color: MC.muted, fontFamily: MF.mono } as CSSProperties,
   cards: { display: 'flex', flexDirection: 'column' as const, gap: 8 } as CSSProperties,
-  card: {
-    background: MC.cardSoft,
-    borderRadius: MR.md,
-    padding: 12,
-    cursor: 'pointer',
-    border: `1px solid ${MC.borderSoft}`,
-  } as CSSProperties,
+  card: { background: MC.cardSoft, borderRadius: MR.md, padding: 12, cursor: 'pointer', border: `1px solid ${MC.borderSoft}` } as CSSProperties,
   numero: { fontSize: 11, color: MC.muted, fontFamily: MF.mono, marginBottom: 4 } as CSSProperties,
   cliente: { fontSize: 13, fontWeight: 700, color: MC.text } as CSSProperties,
   indirizzo: { fontSize: 11, color: MC.muted, marginTop: 2 } as CSSProperties,
   tipo: { fontSize: 11, color: MC.text, marginTop: 4 } as CSSProperties,
+  addBtn: {
+    background: 'transparent',
+    border: `1.5px dashed ${MC.border}`,
+    borderRadius: MR.md,
+    padding: '12px 0',
+    color: MC.muted,
+    fontSize: 11,
+    fontWeight: 700,
+    cursor: 'pointer',
+    fontFamily: 'inherit',
+  } as CSSProperties,
 };

@@ -18,8 +18,7 @@ export default function DocumentiCommessa() {
   return (
     <section style={S.section}>
       <header style={S.header}>
-        <h3 style={S.title}>Documenti</h3>
-        <button style={S.btnCarica}>+ Carica</button>
+        <h3 style={S.title}>Documenti e file</h3>
       </header>
       <div style={S.list}>
         {DOCUMENTI_MOCK.map((d, i) => (
@@ -31,21 +30,36 @@ export default function DocumentiCommessa() {
             <button style={S.dots}>{ICON_DOTS}</button>
           </div>
         ))}
+        <div style={S.row}>
+          <span style={{ ...S.icon, color: MC.muted }}>{ICON_PDF}</span>
+          <span style={S.nome}>Altri documenti.zip</span>
+          <span style={S.data}>25/05/2024</span>
+          <button style={S.dl}>{ICON_DL}</button>
+          <button style={S.dots}>{ICON_DOTS}</button>
+        </div>
       </div>
+      <button style={S.btnPrimary}>Carica documento</button>
     </section>
   );
 }
 
 const S = {
-  section: { background: MC.bgSoft, borderRadius: MR.lg, padding: 14, border: `1px solid ${MC.borderSoft}` } as CSSProperties,
-  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 } as CSSProperties,
+  section: { background: MC.cardSoft, borderRadius: MR.lg, padding: 14, border: `1px solid ${MC.borderSoft}` } as CSSProperties,
+  header: { marginBottom: 10 } as CSSProperties,
   title: { fontSize: 11, fontWeight: 800, color: MC.text, margin: 0, textTransform: 'uppercase' as const, letterSpacing: 0.5 } as CSSProperties,
-  btnCarica: { background: MC.teal, color: '#fff', border: 'none', borderRadius: MR.sm, padding: '5px 10px', fontSize: 10, fontWeight: 800, cursor: 'pointer', fontFamily: 'inherit', textTransform: 'uppercase' as const, letterSpacing: 0.5 } as CSSProperties,
-  list: { display: 'flex', flexDirection: 'column' as const, gap: 6 } as CSSProperties,
-  row: { display: 'grid', gridTemplateColumns: '20px 1fr 80px 24px 24px', alignItems: 'center', gap: 8, padding: '6px 8px', background: MC.cardSoft, borderRadius: MR.sm } as CSSProperties,
+  list: { display: 'flex', flexDirection: 'column' as const, gap: 6, marginBottom: 12 } as CSSProperties,
+  row: { display: 'grid', gridTemplateColumns: '20px 1fr 80px 24px 24px', alignItems: 'center', gap: 8, padding: '6px 8px', background: MC.bgSoft, borderRadius: MR.sm } as CSSProperties,
   icon: { display: 'flex', alignItems: 'center' } as CSSProperties,
   nome: { fontSize: 12, color: MC.text, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' as const } as CSSProperties,
   data: { fontSize: 10, color: MC.muted, fontFamily: MF.mono, textAlign: 'right' as const } as CSSProperties,
   dl: { background: 'transparent', border: 'none', color: MC.teal, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center' } as CSSProperties,
   dots: { background: 'transparent', border: 'none', color: MC.muted, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', justifyContent: 'center' } as CSSProperties,
+  btnPrimary: {
+    width: '100%',
+    background: MC.teal, color: '#fff', border: 'none',
+    borderRadius: MR.md, padding: '12px 0',
+    fontSize: 12, fontWeight: 800, cursor: 'pointer',
+    fontFamily: 'inherit',
+    textTransform: 'uppercase' as const, letterSpacing: 0.5,
+  } as CSSProperties,
 };

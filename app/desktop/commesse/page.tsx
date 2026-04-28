@@ -1,8 +1,8 @@
 'use client';
 
 // ============================================================
-// fliwoX Misure — SUPER AREA COMMESSE Desktop
-// 9 sezioni specifica completa
+// fliwoX Misure — SUPER AREA COMMESSE v3
+// 9 sezioni specifica + vista dettaglio overview
 // ============================================================
 
 import { useMemo, useState, type CSSProperties } from 'react';
@@ -11,16 +11,17 @@ import SidebarDesktop from '@/components/desktop/SidebarDesktop';
 import CommesseHeader from '@/components/commesse-desktop/CommesseHeader';
 import CommesseTabs from '@/components/commesse-desktop/CommesseTabs';
 import CommesseTable from '@/components/commesse-desktop/CommesseTable';
-import PannelloDettaglio from '@/components/commesse-desktop/PannelloDettaglio';
+import LegendaStati from '@/components/commesse-desktop/LegendaStati';
+import DettaglioOverview from '@/components/commesse-desktop/DettaglioOverview';
+import VaniDellaCommessa from '@/components/commesse-desktop/VaniDellaCommessa';
 import WizardNuovaCommessa, { type WizardForm } from '@/components/commesse-desktop/WizardNuovaCommessa';
 import PannelloFiltriAvanzati, { type FormFiltriCom } from '@/components/commesse-desktop/PannelloFiltriAvanzati';
 import VistaKanban from '@/components/commesse-desktop/VistaKanban';
 import VistaGantt from '@/components/commesse-desktop/VistaGantt';
 import DocumentiCommessa from '@/components/commesse-desktop/DocumentiCommessa';
 import NoteComunicazioni from '@/components/commesse-desktop/NoteComunicazioni';
-import AttivitaCorrelate from '@/components/commesse-desktop/AttivitaCorrelate';
-import EsportazioniReport from '@/components/commesse-desktop/EsportazioniReport';
-import FunzionalitaChiave from '@/components/commesse-desktop/FunzionalitaChiave';
+import AzioniMassa from '@/components/commesse-desktop/AzioniMassa';
+import IntegrazioniFunz from '@/components/commesse-desktop/IntegrazioniFunz';
 import { type ComRow, type StatoCom, COMMESSE_MOCK, COUNTS_HARDCODED } from '@/lib/commesse';
 
 export const dynamic = 'force-dynamic';
@@ -34,14 +35,11 @@ export default function CommesseDesktopPage() {
   const [search, setSearch] = useState('');
   const [openWizard, setOpenWizard] = useState(false);
   const [openFiltri, setOpenFiltri] = useState(false);
-  const [selected, setSelected] = useState<ComRow | null>(COMMESSE_MOCK[0]);
+  const [selected, setSelected] = useState<ComRow | null>(null);
+  const [showDetail, setShowDetail] = useState(false);
   const [rows, setRows] = useState<ComRow[]>(COMMESSE_MOCK);
 
-  const counts = useMemo(() => {
-    // I numeri in tab sono fissi come da mockup specifica (78/32/16/7/21)
-    // I rows mock sono solo un campione visualizzabile
-    return COUNTS_HARDCODED;
-  }, []);
+  const counts = useMemo(() => COUNTS_HARDCODED, []);
 
   const filtered = useMemo(() => {
     let res = rows;
@@ -76,7 +74,11 @@ export default function CommesseDesktopPage() {
     };
     setRows((p) => [nuova, ...p]);
     setOpenWizard(false);
-    setSelected(nuova);
+  };
+
+  const apriDettaglio = (r: ComRow) => {
+    setSelected(r);
+    setShowDetail(true);
   };
 
   return (
@@ -89,56 +91,66 @@ export default function CommesseDesktopPage() {
           onSearchChange={setSearch}
           onApriFiltri={() => setOpenFiltri(true)}
           onNuova={() => setOpenWizard(true)}
+          statoSel={tab}
         />
 
-        <div style={S.viewSwitch}>
-          {(['lista', 'kanban', 'gantt'] as VistaCom[]).map((v) => (
-            <button
-              key={v}
-              onClick={() => setVista(v)}
-              style={{
-                ...S.viewBtn,
-                color: vista === v ? MC.teal : MC.muted,
-                borderBottomColor: vista === v ? MC.teal : 'transparent',
-              }}
-            >
-              {v === 'lista' ? 'Lista' : v === 'kanban' ? 'Kanban' : 'Gantt'}
-            </button>
-          ))}
-        </div>
-
-        {vista === 'lista' && (
+        {!showDetail && (
           <>
-            <CommesseTabs active={tab} counts={counts} onChange={setTab} />
-            <CommesseTable
-              rows={filtered}
-              selectedId={selected?.id}
-              onSelect={setSelected}
-            />
-            {selected && (
-              <PannelloDettaglio
-                com={selected}
-                onClose={() => setSelected(null)}
-                onAzione={(_k) => {}}
-              />
+            <div style={S.viewSwitch}>
+              {(['lista', 'kanban', 'gantt'] as VistaCom[]).map((v) => (
+                <button
+                  key={v}
+                  onClick={() => setVista(v)}
+                  style={{
+                    ...S.viewBtn,
+                    color: vista === v ? MC.teal : MC.muted,
+                    borderBottomColor: vista === v ? MC.teal : 'transparent',
+                  }}
+                >
+                  {v === 'lista' ? 'Lista' : v === 'kanban' ? 'Kanban' : 'Gantt'}
+                </button>
+              ))}
+            </div>
+
+            {vista === 'lista' && (
+              <>
+                <CommesseTabs active={tab} counts={counts} onChange={setTab} />
+                <CommesseTable
+                  rows={filtered}
+                  selectedId={selected?.id}
+                  onSelect={apriDettaglio}
+                />
+                <LegendaStati />
+              </>
             )}
+            {vista === 'kanban' && <VistaKanban rows={filtered} onSelect={apriDettaglio} />}
+            {vista === 'gantt' && <VistaGantt rows={filtered} onSelect={apriDettaglio} />}
+
+            <div style={S.bottomBlock}>
+              <AzioniMassa onApplica={() => {}} onSelezionaTutte={() => {}} />
+            </div>
           </>
         )}
 
-        {vista === 'kanban' && <VistaKanban rows={filtered} onSelect={setSelected} />}
-        {vista === 'gantt' && <VistaGantt rows={filtered} onSelect={setSelected} />}
-
-        {/* Sezioni 06 / 07 / 08 / 09 sotto */}
-        {vista === 'lista' && selected && (
-          <div style={S.bottomGrid}>
-            <DocumentiCommessa />
-            <NoteComunicazioni />
-            <AttivitaCorrelate />
-            <EsportazioniReport />
-          </div>
+        {showDetail && selected && (
+          <>
+            <DettaglioOverview
+              com={selected}
+              onBack={() => setShowDetail(false)}
+              onModifica={() => {}}
+              onAzione={(_k) => {}}
+              onChiama={() => {}}
+              onNavigatore={() => {}}
+            />
+            <div style={S.tripleGrid}>
+              <VaniDellaCommessa onVediTutti={() => {}} />
+              <DocumentiCommessa />
+              <NoteComunicazioni />
+            </div>
+          </>
         )}
 
-        <FunzionalitaChiave />
+        <IntegrazioniFunz />
       </section>
 
       {openWizard && (
@@ -160,43 +172,26 @@ export default function CommesseDesktopPage() {
 }
 
 const S = {
-  page: {
-    display: 'flex',
-    minHeight: '100vh',
-    background: MC.bg,
-    fontFamily: MF.ui,
-    color: MC.text,
-  } as CSSProperties,
-  main: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column' as const,
-    minWidth: 0,
-  } as CSSProperties,
+  page: { display: 'flex', minHeight: '100vh', background: MC.bg, fontFamily: MF.ui, color: MC.text } as CSSProperties,
+  main: { flex: 1, display: 'flex', flexDirection: 'column' as const, minWidth: 0 } as CSSProperties,
   viewSwitch: {
-    display: 'flex',
-    padding: '0 24px',
-    borderBottom: `1px solid ${MC.borderSoft}`,
-    background: MC.bg,
+    display: 'flex', padding: '0 24px',
+    borderBottom: `1px solid ${MC.borderSoft}`, background: MC.bg,
   } as CSSProperties,
   viewBtn: {
-    background: 'transparent',
-    border: 'none',
-    cursor: 'pointer',
-    padding: '8px 0',
-    marginRight: 24,
-    fontSize: 11,
-    fontWeight: 700,
-    textTransform: 'uppercase' as const,
-    letterSpacing: 0.6,
-    fontFamily: 'inherit',
-    borderBottom: '2px solid',
+    background: 'transparent', border: 'none', cursor: 'pointer',
+    padding: '8px 0', marginRight: 24,
+    fontSize: 11, fontWeight: 700,
+    textTransform: 'uppercase' as const, letterSpacing: 0.6,
+    fontFamily: 'inherit', borderBottom: '2px solid',
   } as CSSProperties,
-  bottomGrid: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: 16,
+  tripleGrid: {
+    display: 'grid', gridTemplateColumns: '1fr 1fr 1fr',
+    gap: 16, padding: 20,
+    borderTop: `1px solid ${MC.borderSoft}`, background: MC.bg,
+  } as CSSProperties,
+  bottomBlock: {
     padding: 20,
-    borderTop: `1px solid ${MC.borderSoft}`,
+    borderTop: `1px solid ${MC.borderSoft}`, background: MC.bg,
   } as CSSProperties,
 };

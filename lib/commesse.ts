@@ -128,6 +128,32 @@ export const ATTIVITA_CORR_MOCK: AttivitaCorrelata[] = [
   { id: '6', titolo: 'Consegna', stato: 'da_fare' },
 ];
 
+// Vani della commessa (sezione 03 v3)
+export type StatoVano = 'misure_ok' | 'check_ok' | 'in_lavorazione' | 'attesa_misure' | 'completato';
+export const STATO_VANO_LABEL: Record<StatoVano, string> = {
+  misure_ok: 'Misure OK',
+  check_ok: 'Check OK',
+  in_lavorazione: 'In lavorazione',
+  attesa_misure: 'Attesa misure',
+  completato: 'Completato',
+};
+export const STATO_VANO_BG: Record<StatoVano, string> = {
+  misure_ok: '#6CC0A4',
+  check_ok: '#6CC0A4',
+  in_lavorazione: '#F1C40F',
+  attesa_misure: '#F28C1A',
+  completato: '#2FA7A2',
+};
+
+export interface VanoCom { id: string; nome: string; tipo: string; stato: StatoVano; sub?: string }
+export const VANI_MOCK: VanoCom[] = [
+  { id: '1', nome: 'Vano 1 - Finestra Cucina', tipo: 'Finestra 2 ante', stato: 'misure_ok', sub: '5/5' },
+  { id: '2', nome: 'Vano 2 - Porta Balcone', tipo: 'Porta finestra 2 ante', stato: 'misure_ok' },
+  { id: '3', nome: 'Vano 3 - Finestra Bagno', tipo: 'Finestra 1 anta', stato: 'check_ok', sub: '5/5' },
+  { id: '4', nome: 'Vano 4 - Finestra Camera', tipo: 'Finestra 2 ante', stato: 'in_lavorazione' },
+  { id: '5', nome: 'Vano 5 - Scorrevole Soggiorno', tipo: 'Scorrevole 3 ante', stato: 'attesa_misure' },
+];
+
 export function fmtEuro(v: number): string {
   return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', minimumFractionDigits: 0 }).format(v);
 }
