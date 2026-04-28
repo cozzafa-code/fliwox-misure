@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, type CSSProperties } from 'react';
+import { useState, type CSSProperties, type ReactNode } from 'react';
 import { MC, MF, MR, MS } from '@/constants/design-system';
 import { IconClose } from '@/components/icons';
 import { TIPO_INT_LABEL, TECNICI_LIST, STATO_COM_LABEL, type StatoCom, type TipoIntervento } from '@/lib/commesse';
@@ -83,7 +83,7 @@ export default function PannelloFiltriAvanzati({ onClose, onApplica, onPulisci }
   );
 }
 
-function Lbl({ children }: any) { return <div style={S.lbl}>{children}</div>; }
+function Lbl({ children }: { children: ReactNode }) { return <div style={S.lbl}>{children}</div>; }
 
 const S = {
   backdrop: { position: 'fixed' as const, inset: 0, background: 'rgba(0,0,0,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 16, zIndex: 200 } as CSSProperties,

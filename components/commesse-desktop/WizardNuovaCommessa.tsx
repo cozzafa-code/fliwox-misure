@@ -5,7 +5,7 @@
 // 1 Dati cliente · 2 Indirizzo · 3 Tipo intervento · 4 Dettagli · 5 Riepilogo
 // ============================================================
 
-import { useState, type CSSProperties } from 'react';
+import { useState, type CSSProperties, type ReactNode } from 'react';
 import { MC, MF, MR, MS } from '@/constants/design-system';
 import { IconClose } from '@/components/icons';
 import { TIPO_INT_LABEL, TECNICI_LIST, type TipoIntervento } from '@/lib/commesse';
@@ -164,8 +164,12 @@ export default function WizardNuovaCommessa({ onClose, onSalva }: Props) {
   );
 }
 
-function Field({ label, children }: any) { return <div style={S.field}><div style={S.fieldLabel}>{label}</div>{children}</div>; }
-function Input({ v, on, ph, type = 'text' }: any) { return <input type={type} value={v} onChange={(e) => on(e.target.value)} placeholder={ph} style={S.input} />; }
+function Field({ label, children }: { label: string; children: ReactNode }) {
+  return <div style={S.field}><div style={S.fieldLabel}>{label}</div>{children}</div>;
+}
+function Input({ v, on, ph, type = 'text' }: { v: string; on: (val: string) => void; ph?: string; type?: string }) {
+  return <input type={type} value={v} onChange={(e) => on(e.target.value)} placeholder={ph} style={S.input} />;
+}
 function Riep({ label, v }: { label: string; v: string }) {
   return <div style={S.field}><div style={S.fieldLabel}>{label}</div><div style={{ fontSize: 13, color: MC.text, fontWeight: 600 }}>{v}</div></div>;
 }
